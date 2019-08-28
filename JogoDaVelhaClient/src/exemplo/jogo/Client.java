@@ -80,7 +80,7 @@ public class Client extends JFrame{
 		contentPane.setLayout(null);
 
 		ClienteInterfaceImpl clienteInterfaceImpl = new ClienteInterfaceImpl();
-		player = new Player();
+		player = new Player(); 
 		clienteInterfaceImpl.setView(this);
 		cliente = (ClienteInterface) UnicastRemoteObject.exportObject(clienteInterfaceImpl, 0);
 		
