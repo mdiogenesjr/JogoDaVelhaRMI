@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class Client extends JFrame{
+public class View extends JFrame{
 
     /**
 	 * 
@@ -54,7 +54,7 @@ public class Client extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Client frame = new Client();
+					View frame = new View();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -69,7 +69,7 @@ public class Client extends JFrame{
 	 * @throws RemoteException 
 	 * @throws MalformedURLException 
 	 */
-	public Client() throws Exception{	
+	public View() throws Exception{	
 		
 		setTitle("Jogo da Velha");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
