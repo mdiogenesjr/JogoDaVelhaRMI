@@ -3,8 +3,8 @@ package exemplo.jogo;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 
@@ -12,7 +12,7 @@ public class Server implements ServerInterface {
 
     public Server() {}
 
-    List<ClienteInterface> conectados = new ArrayList<ClienteInterface>();
+    Map<Integer,ClienteInterface> conectados = new HashMap<Integer,ClienteInterface>();
 	static int idPlayer = 1;   
 	 
     public void sayHello(ClienteInterface cliente)  throws RemoteException{
@@ -45,8 +45,8 @@ public class Server implements ServerInterface {
 	    	}else{
 	    		player.setNome(client.getPlayer().getNome());
 	    		player.setIdPlayer(idPlayer);
+	    		conectados.put(idPlayer,client);
 	    		idPlayer++;
-	    		conectados.add(client);
 	    		System.out.println("Player conectado!");
 	    		int contadorMsg = 0;
 	    		while(conectados.size() <= 1){
@@ -59,19 +59,10 @@ public class Server implements ServerInterface {
 	    		System.out.println("Players sincronizados!");
 	    		if(player.getIdPlayer() == 1){
 	    			player.setVez(true);
-	    			for(ClienteInterface conectado : conectados){
-						if(conectado.getPlayer().getIdPlayer() != player.getIdPlayer()){
-							player.setNomeAdversario(conectado.getPlayer().getNome());
-						}
-					}
+	    			player.setNomeAdversario(conectados.get(2).getPlayer().getNome());
 	    		}else{
 	    			player.setVez(false);
-	    			int indexPlayerDois = conectados.indexOf(client);
-	    			if(indexPlayerDois == 0){
-	    				player.setNomeAdversario(conectados.get(1).getPlayer().getNome());
-	    			}else{
-	    				player.setNomeAdversario(conectados.get(0).getPlayer().getNome());
-	    			}	
+	    			player.setNomeAdversario(conectados.get(1).getPlayer().getNome());
 	    		}
 	    	}		
 			return player;
@@ -83,9 +74,9 @@ public class Server implements ServerInterface {
 	}
     
     public void verificaConexao() throws Exception{
-    	for(ClienteInterface conectado : conectados){
-    		conectado.exibeResposta("OK");
-    		conectado.exibeResposta("OK");
+    	for(Integer key : conectados.keySet()){
+    		conectados.get(key).exibeResposta("OK");
+    		conectados.get(key).exibeResposta("OK");
     	}
     }
     
@@ -101,10 +92,11 @@ public class Server implements ServerInterface {
 				retornoJogada.setMsg("");
 			}
 			retornoJogada.setListaBotoes(jogada.getListaBotoes());
-			for(ClienteInterface conectado : conectados){
-				if(conectado.getPlayer().getIdPlayer() != jogada.getPlayer().getIdPlayer()){
-					conectado.construirTabuleiro(retornoJogada);
-				}
+		
+			if(jogada.getPlayer().getIdPlayer() == 1) {
+				conectados.get(2).construirTabuleiro(retornoJogada);
+			}else {
+				conectados.get(1).construirTabuleiro(retornoJogada);
 			}
 			
 		}catch (Exception e) {
