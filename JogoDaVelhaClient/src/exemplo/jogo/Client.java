@@ -78,72 +78,73 @@ public class Client extends JFrame{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+
+		ClienteInterfaceImpl clienteInterfaceImpl = new ClienteInterfaceImpl();
+		player = new Player();
+		clienteInterfaceImpl.setView(this);
+		cliente = (ClienteInterface) UnicastRemoteObject.exportObject(clienteInterfaceImpl, 0);
 		
-		try {
-
-			ClienteInterfaceImpl clienteInterfaceImpl = new ClienteInterfaceImpl();
-			player = new Player();
-			clienteInterfaceImpl.setView(this);
-			cliente = (ClienteInterface) UnicastRemoteObject.exportObject(clienteInterfaceImpl, 0);
-			Jogada jogada = new Jogada();
-			jogada.setListaBotoes(null);
-			construirTabuleiro(jogada);
-			
-			JLabel labelJogador = new JLabel("Nome do Jogador");
-			labelJogador.setBounds(26, 27, 120, 20);
-			contentPane.add(labelJogador);
-			
-			nomeJogador = new JTextField();
-			nomeJogador.setBounds(26, 58, 120, 14);
-			contentPane.add(nomeJogador);
-			nomeJogador.setColumns(15);
-			
-			JLabel labelAdversario = new JLabel("Nome do Adversario");
-			labelAdversario.setBounds(356, 27, 120, 20);
-			contentPane.add(labelAdversario);
-			
-			nomeAdversario = new JTextField();
-			nomeAdversario.setBounds(356, 58, 120, 14);
-			contentPane.add(nomeAdversario);
-			nomeAdversario.setColumns(15);
-			nomeAdversario.setEnabled(false);
-			
-			btnConectar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {	
-					try {	
-
-						if("".equals(nomeJogador.getText())){
-							JOptionPane.showMessageDialog(null,"Informe o nome do jogador !");
-						}else{
-							Registry registry = LocateRegistry.getRegistry();
-							servidor = (ServerInterface) registry.lookup("Service");
-							player.setNome(nomeJogador.getText());
-							Player retorno = servidor.conectar(cliente);
-							if(retorno.getCodErro() == 0){
-								nomeJogador.setEnabled(false);
-								nomeAdversario.setText(retorno.getNomeAdversario());
-								player = retorno;
-								if(player.isVez()){
-									desbloquearTabuleiro();
-								}
-							}else{
-								if(retorno.getMsg() != null && !"".equals(retorno.getMsg())){
-									JOptionPane.showMessageDialog(null,retorno.getMsg());
-								}
-							}
-						}	
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(null,"Erro ao Conectar");
-					} 	
-				}
-			});
-			btnConectar.setBounds(207, 53, 89, 23);
-			contentPane.add(btnConectar);
-		}
-		catch (NotBoundException e) {
-			JOptionPane.showMessageDialog(null,"Servidor offline");
-		}catch (Exception e) {
-			JOptionPane.showMessageDialog(null,"Servidor offline");
+		Jogada jogada = new Jogada();
+		jogada.setListaBotoes(null);
+		construirTabuleiro(jogada);
+		
+		JLabel labelJogador = new JLabel("Nome do Jogador");
+		labelJogador.setBounds(26, 27, 120, 20);
+		contentPane.add(labelJogador);
+		
+		nomeJogador = new JTextField();
+		nomeJogador.setBounds(26, 58, 120, 14);
+		contentPane.add(nomeJogador);
+		nomeJogador.setColumns(15);
+		
+		JLabel labelAdversario = new JLabel("Nome do Adversario");
+		labelAdversario.setBounds(356, 27, 120, 20);
+		contentPane.add(labelAdversario);
+		
+		nomeAdversario = new JTextField();
+		nomeAdversario.setBounds(356, 58, 120, 14);
+		contentPane.add(nomeAdversario);
+		nomeAdversario.setColumns(15);
+		nomeAdversario.setEnabled(false);
+		
+		btnConectar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {	
+				try {	
+					if("".equals(nomeJogador.getText())){
+						JOptionPane.showMessageDialog(null,"Informe o nome do jogador !");
+					}else{
+						player.setNome(nomeJogador.getText());
+						conectarNoServer();
+					}	
+				} catch (NotBoundException e) {
+					JOptionPane.showMessageDialog(null,"Erro ao Conectar");
+				} catch (RemoteException e) {
+					JOptionPane.showMessageDialog(null,"Servidor offline");
+				} 
+			}
+		});
+		
+		btnConectar.setBounds(207, 53, 89, 23);
+		contentPane.add(btnConectar);
+	}
+	
+	public void conectarNoServer() throws RemoteException, NotBoundException {
+		Registry registry = LocateRegistry.getRegistry();
+		servidor = (ServerInterface) registry.lookup("Service");
+		
+		//conecta e devolve um player com id, nome de adversario e vez, caso nao tenha erro
+		Player retorno = servidor.conectar(cliente);
+		if(retorno.getCodErro() == 0){
+			nomeJogador.setEnabled(false);
+			nomeAdversario.setText(retorno.getNomeAdversario());
+			player = retorno;
+			if(player.isVez()){
+				desbloquearTabuleiro();
+			}
+		}else{
+			if(null != retorno.getMsg() && !"".equals(retorno.getMsg())){
+				JOptionPane.showMessageDialog(null,retorno.getMsg());
+			}
 		}
 	}
 	
