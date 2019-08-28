@@ -141,7 +141,7 @@ public class Client extends JFrame{
 			if(player.isVez()){
 				desbloquearTabuleiro();
 			}
-		}else{
+		}else{ 
 			if(null != retorno.getMsg() && !"".equals(retorno.getMsg())){
 				JOptionPane.showMessageDialog(null,retorno.getMsg());
 			}
