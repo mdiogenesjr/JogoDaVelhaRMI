@@ -10,7 +10,7 @@ public class Jogada implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 5118468923123175645L;
-	private String msg; 
+	private String msg;
 	private List<JButton> listaBotoes;
 	private Player player;
 
