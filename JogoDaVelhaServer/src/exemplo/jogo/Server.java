@@ -13,7 +13,7 @@ public class Server implements ServerInterface {
     public Server() {}
 
     List<ClienteInterface> conectados = new ArrayList<ClienteInterface>();
-	static int idPlayer = 1;
+	static int idPlayer = 1;   
 	 
     public void sayHello(ClienteInterface cliente)  throws RemoteException{
     	cliente.exibeResposta("Veio!");
@@ -40,7 +40,7 @@ public class Server implements ServerInterface {
 		try{
 			if(conectados.size() == 2){
 				verificaConexao();
-				player.setMsg("Servidor com o n˙mero m·ximo de usu·rios");
+				player.setMsg("Servidor com o n√∫mero m√°ximo de usu√°rios");
 				player.setCodErro(2);
 	    	}else{
 	    		player.setNome(client.getPlayer().getNome());
@@ -108,7 +108,7 @@ public class Server implements ServerInterface {
 			}
 			
 		}catch (Exception e) {
-			retornoJogada.setMsg("Conex„o interrompida, o jogo ser· reiniciado.");
+			retornoJogada.setMsg("Conex√£o interrompida, o jogo ser√° reiniciado.");
 			conectados.clear();
 			idPlayer = 1;
 			return retornoJogada;
