@@ -43,8 +43,8 @@ public class Client extends JFrame{
 	JButton btnNewButton_8 = new JButton("");
 	JButton btnConectar = new JButton("Conectar");
 	
-	ServerInterface servidor;
-	ClienteInterface cliente;
+	private ServerInterface servidor;
+	private ClienteInterface cliente;
 	private Player player;
 	
 	/**
