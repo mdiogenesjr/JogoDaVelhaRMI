@@ -9,7 +9,7 @@ public class ClienteInterfaceImpl implements ClienteInterface{
 		System.out.println(msg);
 	}
 	
-	private Client view;
+	private View view;
 
 	public ClienteInterfaceImpl() throws Exception {
 		super();
@@ -20,11 +20,11 @@ public class ClienteInterfaceImpl implements ClienteInterface{
 		view.construirTabuleiro(jogada);
 	}
 
-	public Client getView() {
+	public View getView() {
 		return view;
 	}
 
-	public void setView(Client view) {
+	public void setView(View view) {
 		this.view = view;
 	}
 
