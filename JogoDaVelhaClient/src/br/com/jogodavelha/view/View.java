@@ -16,13 +16,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import br.com.jogodavelha.client.ClienteInterface;
+import br.com.jogodavelha.client.ClientInterface;
+import br.com.jogodavelha.enums.ErrorEnum;
 import br.com.jogodavelha.model.Jogada;
 import br.com.jogodavelha.model.Player;
 import br.com.jogodavelha.server.ServerInterface;
 import br.com.jogodavelha.util.ClientUtil;
 import br.com.jogodavelha.util.ServerUtil;
-import br.com.jogodavelha.util.ViewUtil;
 
 public class View extends JFrame{
 
@@ -48,7 +48,7 @@ public class View extends JFrame{
 	JButton btnConectar = new JButton("Conectar");
 	
 	private ServerInterface server;
-	private ClienteInterface client;
+	private ClientInterface client;
 	private Player player;
 	
 	/**
@@ -73,11 +73,11 @@ public class View extends JFrame{
 	private void conectar() throws RemoteException, NotBoundException {
 		server = ServerUtil.connect();
 		player = server.conectar(client);
-		if(player.getCodErro() == 0){
+		if(player.getCodErro() == ErrorEnum.SUCCESS.getId()){
 			nomeJogador.setEnabled(false);
 			nomeAdversario.setText(player.getNomeAdversario());
 			if(player.isVez()){
-				ViewUtil.desbloquearTabuleiro(listaBotoes);
+				desbloquearTabuleiro(listaBotoes);
 			}
 		}else{ 
 			if(null != player.getMsg() && !"".equals(player.getMsg())){
@@ -100,10 +100,8 @@ public class View extends JFrame{
 		contentPane.add(button);
 	}
 	
-	public void atualizarTabuleiro(Jogada jogada){
-		
-		if(null != jogada.getListaBotoes()){
-			
+	public void atualizarTabuleiro(Jogada jogada){	
+		if(null != jogada.getListaBotoes()){		
 			btnNewButton.setText(jogada.getListaBotoes().get(0).getText());
 			btnNewButton_1.setText(jogada.getListaBotoes().get(1).getText());
 			btnNewButton_2.setText(jogada.getListaBotoes().get(2).getText());
@@ -125,14 +123,13 @@ public class View extends JFrame{
 			if(!"".equals(jogada.getMsg())){
 				JOptionPane.showMessageDialog(null,jogada.getMsg());
 				try {
-					ViewUtil.limpaTabuleiro(listaBotoes);
+					limpaTabuleiro(listaBotoes);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null,"Erro na comunicação");
 				}
 			}
 			
 		}else{
-
 			inserirAcaoBotoes(btnNewButton, 75, 128, 89, 50);
 			inserirAcaoBotoes(btnNewButton_1, 75, 204, 89, 50);
 			inserirAcaoBotoes(btnNewButton_2, 75, 280, 89, 50);
@@ -153,7 +150,7 @@ public class View extends JFrame{
 			listaBotoes.add(btnNewButton_7);
 			listaBotoes.add(btnNewButton_8);
 			
-			ViewUtil.bloquearTabuleiro(listaBotoes);
+			bloquearTabuleiro(listaBotoes);
 		}
 	}
 	
@@ -206,8 +203,7 @@ public class View extends JFrame{
 		contentPane.add(btnConectar);
 	}
 	
-	private void jogar(JButton botao) throws Exception{
-		
+	private void jogar(JButton botao) throws Exception{		
 		tratarEventoBotao(botao,player);
 		Jogada jogada = new Jogada();
 		jogada.setListaBotoes(listaBotoes);
@@ -216,10 +212,10 @@ public class View extends JFrame{
 		
 		if(!"".equals(msg)){
 			JOptionPane.showMessageDialog(null,msg);
-			ViewUtil.limpaTabuleiro(listaBotoes);
-			ViewUtil.bloquearTabuleiro(listaBotoes);
+			limpaTabuleiro(listaBotoes);
+			bloquearTabuleiro(listaBotoes);
 		}else{
-			ViewUtil.bloquearTabuleiro(listaBotoes);
+			bloquearTabuleiro(listaBotoes);
 		}
 	}
 	
@@ -231,13 +227,28 @@ public class View extends JFrame{
 			botao.setText("O");
 		}
 	}
+	
+	private void desbloquearTabuleiro(List<JButton> listaBotoes){
+		for(JButton botao : listaBotoes){
+			botao.setEnabled(true);
+		}
+	}
+	
+	private void bloquearTabuleiro(List<JButton> listaBotoes) {
+		for(JButton botao : listaBotoes){
+			botao.setEnabled(false);
+		}	
+	}	
+	
+	private void limpaTabuleiro(List<JButton> listaBotoes) throws Exception{
+		for(JButton botao : listaBotoes){
+			botao.setText("");
+			botao.setEnabled(true);
+		}
+	}
 
 	public Player getPlayer() {
 		return player;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 	
 }

@@ -6,11 +6,11 @@ import br.com.jogodavelha.model.Jogada;
 import br.com.jogodavelha.model.Player;
 import br.com.jogodavelha.view.View;
 
-public class ClienteInterfaceImpl implements ClienteInterface{
+public class ClientInterfaceImpl implements ClientInterface{
 	
 	private View view;
 
-	public ClienteInterfaceImpl(View view) throws Exception {
+	public ClientInterfaceImpl(View view) throws Exception {
 		this.view = view;
 	}
 	
@@ -28,10 +28,6 @@ public class ClienteInterfaceImpl implements ClienteInterface{
 
 	public Player getPlayer() {
 		return view.getPlayer();
-	}
-
-	public void setPlayer(Player player) {
-		this.view.setPlayer(player);
 	}
 	
 	public void exibeResposta(String msg) throws RemoteException{

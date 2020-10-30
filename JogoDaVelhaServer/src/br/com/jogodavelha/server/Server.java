@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.JButton;
 
-import br.com.jogodavelha.client.ClienteInterface;
+import br.com.jogodavelha.client.ClientInterface;
+import br.com.jogodavelha.enums.ErrorEnum;
 import br.com.jogodavelha.model.Jogada;
 import br.com.jogodavelha.model.Player;
 import br.com.jogodavelha.util.ServerUtil;
@@ -22,20 +23,20 @@ public class Server implements ServerInterface {
         }
     }
 
-    Map<Integer,ClienteInterface> conectados = new HashMap<Integer,ClienteInterface>();
+    Map<Integer,ClientInterface> conectados = new HashMap<Integer,ClientInterface>();
 	static int idPlayer = 1;   
 	 
-    public void sayHello(ClienteInterface cliente)  throws RemoteException{
+    public void sayHello(ClientInterface cliente)  throws RemoteException{
     	cliente.exibeResposta("Veio!");
     }
     
-    public Player conectar(ClienteInterface client) throws RemoteException {	
+    public Player conectar(ClientInterface client) throws RemoteException {	
 		Player player = new Player();
 		try{
 			if(conectados.size() == 2){
 				verificarConexao();
-				player.setMsg("Servidor com o número máximo de usuários");
-				player.setCodErro(2);
+				player.setMsg(ErrorEnum.MAX_USERS.getDescricao());
+				player.setCodErro(ErrorEnum.MAX_USERS.getId());
 	    	}else{
 	    		conectarPlayer(player, client);
 	    		sincronizarPlayers(player, client);
@@ -47,7 +48,7 @@ public class Server implements ServerInterface {
 		}
 	}
     
-    private void conectarPlayer(Player player, ClienteInterface client) throws RemoteException {
+    private void conectarPlayer(Player player, ClientInterface client) throws RemoteException {
     	player.setNome(client.getPlayer().getNome());
 		player.setIdPlayer(idPlayer);
 		conectados.put(idPlayer,client);
@@ -55,18 +56,13 @@ public class Server implements ServerInterface {
 		System.out.println("Player conectado!");
     }
     
-    private void sincronizarPlayers(Player player, ClienteInterface client) throws RemoteException {
-    	int contadorMsg = 0;
-		while(conectados.size() <= 1){
-			if(contadorMsg == 0){
-				System.out.println("Aguardado player 2...");
-			}
-			contadorMsg++;
-		}
+    private void sincronizarPlayers(Player player, ClientInterface client) throws RemoteException, InterruptedException {
+    	System.out.println("Aguardado o outro player...");
+		while(conectados.size() <= 1)Thread.sleep(1);
 		System.out.println("Players sincronizados!");
     }
     
-    private void definirPlayers(Player player, ClienteInterface client) throws RemoteException {
+    private void definirPlayers(Player player, ClientInterface client) throws RemoteException {
     	if(player.getIdPlayer() == 1){
 			player.setVez(true);
 			player.setNomeAdversario(conectados.get(2).getPlayer().getNome());
@@ -76,7 +72,7 @@ public class Server implements ServerInterface {
 		}
     }
     
-    private Player reconectar(ClienteInterface client) throws RemoteException {
+    private Player reconectar(ClientInterface client) throws RemoteException {
     	conectados.clear();
 		idPlayer = 1;
 		return conectar(client);
@@ -89,7 +85,7 @@ public class Server implements ServerInterface {
     	}
     }
     
-    public Jogada jogar(Jogada jogada,ClienteInterface clienteInterface) {
+    public Jogada jogar(Jogada jogada,ClientInterface clienteInterface) {
 		// TODO Auto-generated method stub
 		Jogada retornoJogada = new Jogada();
 		try{
