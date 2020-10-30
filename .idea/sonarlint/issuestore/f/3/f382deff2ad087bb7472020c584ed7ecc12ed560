@@ -1,0 +1,28 @@
+
+Q	java:S110"<This class has 6 parents which is greater than 5 authorized.(Ùá¯à
+`	java:S112H"FDefine and throw a dedicated exception instead of using a generic one.(Ýöžóüÿÿÿÿ
+a	java:S112„"FDefine and throw a dedicated exception instead of using a generic one.(É“þÔýÿÿÿÿ
+C
+java:S16046"(Make this anonymous inner class a lambda(¤©Òâüÿÿÿÿ
+C
+java:S1604n"(Make this anonymous inner class a lambda(£øº«üÿÿÿÿ
+?
+java:S1604˜"(Make this anonymous inner class a lambda(Èú†
+s	java:S116$"YRename this field "btnNewButton_1" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(£¦¢öüÿÿÿÿ
+n	java:S116%"YRename this field "btnNewButton_2" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ã”
+n	java:S116&"YRename this field "btnNewButton_3" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œ¹§Ù
+s	java:S116'"YRename this field "btnNewButton_4" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿÉœùÿÿÿÿ
+n	java:S116("YRename this field "btnNewButton_5" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(üßÚ
+s	java:S116)"YRename this field "btnNewButton_6" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¼£–¡üÿÿÿÿ
+n	java:S116*"YRename this field "btnNewButton_7" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Áï‹ž
+n	java:S116+"YRename this field "btnNewButton_8" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(øÔÇŽ
+>
+java:S1948"(Make "listaBotoes" private or transient.(×¢ÝÅ
+o
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(×¢ÝÅ
+d
+java:S3252K"IUse static access with "javax.swing.WindowConstants" for "EXIT_ON_CLOSE".(Õû»öþÿÿÿÿ
+^
+java:S1126´"BReplace this if-then-else statement by a single method invocation.(Ê”Äªÿÿÿÿÿ
+ˆ
+java:S1130„"lRemove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.(É“þÔýÿÿÿÿ
