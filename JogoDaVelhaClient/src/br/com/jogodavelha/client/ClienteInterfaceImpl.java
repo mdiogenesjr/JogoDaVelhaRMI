@@ -7,21 +7,15 @@ import br.com.jogodavelha.model.Player;
 import br.com.jogodavelha.view.View;
 
 public class ClienteInterfaceImpl implements ClienteInterface{
-
-	public void exibeResposta(String msg) throws RemoteException{
-		// TODO Auto-generated method stub
-		System.out.println(msg);
-	}
 	
 	private View view;
 
-	public ClienteInterfaceImpl() throws Exception {
-		super();
-		// TODO Auto-generated constructor stub
+	public ClienteInterfaceImpl(View view) throws Exception {
+		this.view = view;
 	}
 	
 	public void construirTabuleiro(Jogada jogada)throws RemoteException{
-		view.construirTabuleiro(jogada);
+		view.atualizarTabuleiro(jogada);
 	}
 
 	public View getView() {
@@ -38,6 +32,11 @@ public class ClienteInterfaceImpl implements ClienteInterface{
 
 	public void setPlayer(Player player) {
 		this.view.setPlayer(player);
+	}
+	
+	public void exibeResposta(String msg) throws RemoteException{
+		// TODO Auto-generated method stub
+		System.out.println(msg);
 	}
 
 }

@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +17,10 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import br.com.jogodavelha.client.ClienteInterface;
-import br.com.jogodavelha.client.ClienteInterfaceImpl;
 import br.com.jogodavelha.model.Jogada;
 import br.com.jogodavelha.model.Player;
 import br.com.jogodavelha.server.ServerInterface;
+import br.com.jogodavelha.util.ClientUtil;
 import br.com.jogodavelha.util.ServerUtil;
 
 public class View extends JFrame{
@@ -57,66 +56,20 @@ public class View extends JFrame{
 	 * @throws RemoteException 
 	 * @throws MalformedURLException 
 	 */
-	public View() throws Exception{	
-		
-		setTitle("Jogo da Velha");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 566, 428);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-
-		ClienteInterfaceImpl clienteInterfaceImpl = new ClienteInterfaceImpl();
+	public View() throws Exception{			
+		construirTabuleiro();
 		player = new Player();
-		clienteInterfaceImpl.setView(this);
-		client = (ClienteInterface) UnicastRemoteObject.exportObject(clienteInterfaceImpl, 0);
-		
-		Jogada jogada = new Jogada();
-		jogada.setListaBotoes(null);
-		construirTabuleiro(jogada);
-		
-		JLabel labelJogador = new JLabel("Nome do Jogador");
-		labelJogador.setBounds(26, 27, 120, 20);
-		contentPane.add(labelJogador);
-		
-		nomeJogador = new JTextField();
-		nomeJogador.setBounds(26, 58, 120, 14);
-		contentPane.add(nomeJogador);
-		nomeJogador.setColumns(15);
-		
-		JLabel labelAdversario = new JLabel("Nome do Adversario");
-		labelAdversario.setBounds(356, 27, 120, 20);
-		contentPane.add(labelAdversario);
-		
-		nomeAdversario = new JTextField();
-		nomeAdversario.setBounds(356, 58, 120, 14);
-		contentPane.add(nomeAdversario);
-		nomeAdversario.setColumns(15);
-		nomeAdversario.setEnabled(false);
-		
-		btnConectar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {	
-				try {	
-					if("".equals(nomeJogador.getText())){
-						JOptionPane.showMessageDialog(null,"Informe o nome do jogador !");
-					}else{
-						player.setNome(nomeJogador.getText());
-						conectar();
-					}	
-				} catch (NotBoundException e) {
-					JOptionPane.showMessageDialog(null,"Erro ao Conectar");
-				} catch (RemoteException e) {
-					JOptionPane.showMessageDialog(null,"Servidor offline");
-				} 
-			}
-		});
-		
-		btnConectar.setBounds(207, 53, 89, 23);
-		contentPane.add(btnConectar);
+		client = ClientUtil.getClient(this);
+		iniciarTabuleiro();
 	}
 	
-	public void conectar() throws RemoteException, NotBoundException {
+	private void iniciarTabuleiro() {
+		Jogada jogada = new Jogada();
+		jogada.setListaBotoes(null);
+		atualizarTabuleiro(jogada);
+	}
+	
+	private void conectar() throws RemoteException, NotBoundException {
 		server = ServerUtil.connect();
 		player = server.conectar(client);
 		if(player.getCodErro() == 0){
@@ -132,7 +85,7 @@ public class View extends JFrame{
 		}
 	}
 	
-	public void inserirAcaoBotoes(JButton button, int x, int y, int width, int height){
+	private void inserirAcaoBotoes(JButton button, int x, int y, int width, int height){
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {	
 				try {		
@@ -146,7 +99,7 @@ public class View extends JFrame{
 		contentPane.add(button);
 	}
 	
-	public void construirTabuleiro(Jogada jogada){
+	public void atualizarTabuleiro(Jogada jogada){
 		
 		if(null != jogada.getListaBotoes()){
 			
@@ -203,7 +156,56 @@ public class View extends JFrame{
 		}
 	}
 	
-	public void jogar(JButton botao) throws Exception{
+	private void construirTabuleiro(){
+		setTitle("Jogo da Velha");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 566, 428);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel labelJogador = new JLabel("Nome do Jogador");
+		labelJogador.setBounds(26, 27, 120, 20);
+		contentPane.add(labelJogador);
+		
+		nomeJogador = new JTextField();
+		nomeJogador.setBounds(26, 58, 120, 14);
+		contentPane.add(nomeJogador);
+		nomeJogador.setColumns(15);
+		
+		JLabel labelAdversario = new JLabel("Nome do Adversario");
+		labelAdversario.setBounds(356, 27, 120, 20);
+		contentPane.add(labelAdversario);
+		
+		nomeAdversario = new JTextField();
+		nomeAdversario.setBounds(356, 58, 120, 14);
+		contentPane.add(nomeAdversario);
+		nomeAdversario.setColumns(15);
+		nomeAdversario.setEnabled(false);
+		
+		btnConectar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {	
+				try {	
+					if("".equals(nomeJogador.getText())){
+						JOptionPane.showMessageDialog(null,"Informe o nome do jogador !");
+					}else{
+						player.setNome(nomeJogador.getText());
+						conectar();
+					}	
+				} catch (NotBoundException e) {
+					JOptionPane.showMessageDialog(null,"Erro ao Conectar");
+				} catch (RemoteException e) {
+					JOptionPane.showMessageDialog(null,"Servidor offline");
+				} 
+			}
+		});
+		
+		btnConectar.setBounds(207, 53, 89, 23);
+		contentPane.add(btnConectar);
+	}
+	
+	private void jogar(JButton botao) throws Exception{
 		
 		tratarEventoBotao(botao,player);
 		Jogada jogada = new Jogada();
@@ -220,19 +222,19 @@ public class View extends JFrame{
 		}
 	}
 	
-	public void desbloquearTabuleiro(){
+	private void desbloquearTabuleiro(){
 		for(JButton botao : listaBotoes){
 			botao.setEnabled(true);
 		}
 	}
 	
-	public void bloquearTabuleiro() {
+	private void bloquearTabuleiro() {
 		for(JButton botao : listaBotoes){
 			botao.setEnabled(false);
 		}	
 	}	
 	
-	public void tratarEventoBotao(JButton botao,Player c){
+	private void tratarEventoBotao(JButton botao,Player c){
 		botao.setEnabled(false);
 		if(c.getIdPlayer() == 1){
 			botao.setText("X");
@@ -241,7 +243,7 @@ public class View extends JFrame{
 		}
 	}
 	
-	public void limpaTabuleiro(List<JButton> listaBotoes) throws Exception{
+	private void limpaTabuleiro(List<JButton> listaBotoes) throws Exception{
 		for(JButton botao : listaBotoes){
 			botao.setText("");
 			botao.setEnabled(true);
@@ -255,6 +257,5 @@ public class View extends JFrame{
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-
 	
 }
