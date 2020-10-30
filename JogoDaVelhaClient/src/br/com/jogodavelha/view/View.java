@@ -22,6 +22,7 @@ import br.com.jogodavelha.model.Player;
 import br.com.jogodavelha.server.ServerInterface;
 import br.com.jogodavelha.util.ClientUtil;
 import br.com.jogodavelha.util.ServerUtil;
+import br.com.jogodavelha.util.ViewUtil;
 
 public class View extends JFrame{
 
@@ -76,7 +77,7 @@ public class View extends JFrame{
 			nomeJogador.setEnabled(false);
 			nomeAdversario.setText(player.getNomeAdversario());
 			if(player.isVez()){
-				desbloquearTabuleiro();
+				ViewUtil.desbloquearTabuleiro(listaBotoes);
 			}
 		}else{ 
 			if(null != player.getMsg() && !"".equals(player.getMsg())){
@@ -124,7 +125,7 @@ public class View extends JFrame{
 			if(!"".equals(jogada.getMsg())){
 				JOptionPane.showMessageDialog(null,jogada.getMsg());
 				try {
-					limpaTabuleiro(listaBotoes);
+					ViewUtil.limpaTabuleiro(listaBotoes);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null,"Erro na comunicação");
 				}
@@ -152,7 +153,7 @@ public class View extends JFrame{
 			listaBotoes.add(btnNewButton_7);
 			listaBotoes.add(btnNewButton_8);
 			
-			bloquearTabuleiro();
+			ViewUtil.bloquearTabuleiro(listaBotoes);
 		}
 	}
 	
@@ -215,38 +216,19 @@ public class View extends JFrame{
 		
 		if(!"".equals(msg)){
 			JOptionPane.showMessageDialog(null,msg);
-			limpaTabuleiro(listaBotoes);
-			bloquearTabuleiro();
+			ViewUtil.limpaTabuleiro(listaBotoes);
+			ViewUtil.bloquearTabuleiro(listaBotoes);
 		}else{
-			bloquearTabuleiro();
+			ViewUtil.bloquearTabuleiro(listaBotoes);
 		}
 	}
 	
-	private void desbloquearTabuleiro(){
-		for(JButton botao : listaBotoes){
-			botao.setEnabled(true);
-		}
-	}
-	
-	private void bloquearTabuleiro() {
-		for(JButton botao : listaBotoes){
-			botao.setEnabled(false);
-		}	
-	}	
-	
-	private void tratarEventoBotao(JButton botao,Player c){
+	private void tratarEventoBotao(JButton botao,Player player){
 		botao.setEnabled(false);
-		if(c.getIdPlayer() == 1){
+		if(player.getIdPlayer() == 1){
 			botao.setText("X");
 		}else{
 			botao.setText("O");
-		}
-	}
-	
-	private void limpaTabuleiro(List<JButton> listaBotoes) throws Exception{
-		for(JButton botao : listaBotoes){
-			botao.setText("");
-			botao.setEnabled(true);
 		}
 	}
 
