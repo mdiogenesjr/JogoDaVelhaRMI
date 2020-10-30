@@ -103,9 +103,9 @@ public class Server implements ServerInterface {
 			retornoJogada.setListaBotoes(jogada.getListaBotoes());
 		
 			if(jogada.getPlayer().getIdPlayer() == 1) {
-				conectados.get(2).construirTabuleiro(retornoJogada);
+				conectados.get(2).atualizarTabuleiro(retornoJogada);
 			}else {
-				conectados.get(1).construirTabuleiro(retornoJogada);
+				conectados.get(1).atualizarTabuleiro(retornoJogada);
 			}			
 		}catch (Exception e) {
 			return tratarErroAoJogar(retornoJogada);

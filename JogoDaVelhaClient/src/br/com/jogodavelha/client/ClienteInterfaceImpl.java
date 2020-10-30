@@ -14,7 +14,7 @@ public class ClienteInterfaceImpl implements ClienteInterface{
 		this.view = view;
 	}
 	
-	public void construirTabuleiro(Jogada jogada)throws RemoteException{
+	public void atualizarTabuleiro(Jogada jogada)throws RemoteException{
 		view.atualizarTabuleiro(jogada);
 	}
 
